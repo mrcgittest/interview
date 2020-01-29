@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import javax.servlet.RequestDispatcher;
@@ -34,10 +35,28 @@ public class InterviewServlet extends HttpServlet{
 		if(result.getResult()) {
 			Properties prop = result.getProperties();
 			
-			session.setAttribute("interview.querydata", prop);
+			String customerNumbers = prop.getProperty("customerNumbers");
+			String customerNames = prop.getProperty("customerNames");
+			String amountsDue = prop.getProperty("amountsDue");
+			
+			String[] numsArr = customerNumbers.split(":");
+			String[] namesArr = customerNames.split(":");
+			String[] amountsDueArr = amountsDue.split(":");
+			
+			ArrayList<Customer> customers = new ArrayList<Customer>();
+			
+			for(int i = 0; i < numsArr.length; i++) {
+				Customer c = new Customer(numsArr[i], namesArr[i], amountsDueArr[i]);
+				
+				customers.add(c);
+			}
+			
+			request.setAttribute("customers", customers);
+			request.setAttribute("customerNames", customerNames);
+			request.setAttribute("amountsDue", amountsDue);
 		}
 		
-		sendToScreen(sct, request, res, "/jsp/customerlist.jsp");
+		sendToScreen(sct, request, res, "/jsp/customerlist.ftl");
 	}
 	
 	private void sendToScreen(ServletContext sct, HttpServletRequest request, HttpServletResponse res, String screen) {

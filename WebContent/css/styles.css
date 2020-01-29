@@ -1,0 +1,6 @@
+tr.oddRow{
+	background-color: #D3D3D3;
+}
+tr.evenRow{
+	background-color: white;
+}
